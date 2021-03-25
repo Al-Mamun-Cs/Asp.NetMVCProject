@@ -1,0 +1,43 @@
+﻿@model List<AuthATMProject.Models.UserRoleViewModel>
+
+@{
+    ViewBag.Title = "EditUserInRole";
+    var id = ViewBag.roleId;
+}
+<form method="post">
+    <div class="row">
+        <table class="table table-bordered">
+            <tr>
+                <td colspan="2"><h2>Add or Remove Users to/form role name @ViewBag.RoleName</h2></td>
+            </tr>
+            @for (int i = 0; i < Model.Count; i++)
+            {
+                <tr>
+                    @Html.HiddenFor(x => Model[i].UserId);
+                    @Html.HiddenFor(x => Model[i].UserName);
+                    <td>
+                        @if (Model[i].IsSelected)
+                        {
+                            @Html.CheckBoxFor(x => Model[i].IsSelected, new { @checked = "checked" })
+                        }
+                        else
+                        {
+                            @Html.CheckBoxFor(x => Model[i].IsSelected)
+                        }
+                    </td>
+                    <td>
+                        <label> @Model[i].UserName</label>
+                    </td>
+                </tr>
+            }
+
+        </table>
+
+    </div>
+
+    <div class="row">
+        <input type="submit" value="Update" class="btn btn-primary" style="width:auto" />
+        @Html.ActionLink("Go to List", "Index", "Administrator", null, new { @class = "btn btn-primary" })
+    </div>
+
+</form>

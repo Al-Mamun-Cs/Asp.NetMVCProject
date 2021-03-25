@@ -1,0 +1,78 @@
+﻿@model PagedList.IPagedList<AuthATMProject.Models.ViewModels.ClientListViewModel>
+@using PagedList.Mvc
+@{
+    ViewBag.Title = "Index";
+}
+<link href="~/Content/jquery-ui.css" rel="stylesheet" />
+<link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+<h2>Index</h2>
+@Html.ActionLink("Create New Client", "Create")
+<div style="background-color:lightcyan">
+    @using (Html.BeginForm("Index", "Client", FormMethod.Get))
+    {
+        <p>
+            Find by name: @Html.TextBox("SearchString", ViewBag.CurrentFilter as string)
+            <input type="submit" value="Search" />
+        </p>
+    }
+    <table class="table table-bordered" style="background-color:lightgrey">
+        <tr style="Color:white">
+            <th>Client Id</th>
+            <th>@Html.ActionLink("Client Name", "Index", new { sortOrder = ViewBag.SortNameParam })</th>
+            <th>Date Of Birth</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>IsActive</th>
+            <th>Image Name</th>
+            <th>Image</th>
+            <th>Accounts Type</th>
+            <th>Actions..</th>
+        </tr>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@Html.DisplayFor(modelItem => item.ClientId)</td>
+                <td>@Html.DisplayFor(modelItem => item.ClientName)</td>
+                <td>@Convert.ToString(String.Format("{0:dd/MM/yyyy}", item.DateOfBirth))</td>
+                <td>@Html.DisplayFor(modelItem => item.Email)</td>
+                <td>@Html.DisplayFor(modelItem => item.Phone)</td>
+                <td>@Html.DisplayFor(modelItem => item.IsActive)</td>
+                <td>@Html.DisplayFor(modelItem => item.ImageName)</td>
+                <td><img src="@Url.Content(item.ImageURL)" alt="Image" width="50" height="50" /></td>
+                <td>@Html.DisplayFor(modelItem => item.AccountsTitle)</td>
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { id = item.ClientId })|
+                    @Html.ActionLink("Delete", "Delete", new { id = item.ClientId })|
+                    <a href="#" name="Details" onclick="DetailsRecord('+@item.ClientId+')" class="btn btn-success">Details</a>
+                </td>
+            </tr>
+        }
+    </table>
+    <br />
+    Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber)
+    of @Model.PageCount @Html.PagedListPager(Model, Page => Url.Action("Index", new { Page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }))
+    <div id="partialDiv">
+    </div>
+    <script src="~/Scripts/jquery-1.12.4.min.js"></script>
+    @*<script src="~/Scripts/jquery-ui.js"></script>*@
+    @*<script src="~/Scripts/jquery-3.0.0.min.js"></script>*@
+    <script src="~/Scripts/jquery.validate.min.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.bootstrap.min.js"></script>
+    <script>
+        function DetailsRecord(ClientId) {
+            $.ajax({
+                url: "/Client/Details?ClientId=" + ClientId,
+                type: 'Get',
+                data: "",
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    $('#partialDiv').show();
+                    $('#partialDiv').html(data);
+                },
+                error: function (error) {
+                    alert(error)
+                }
+            })
+        }
+    </script>
+</div>

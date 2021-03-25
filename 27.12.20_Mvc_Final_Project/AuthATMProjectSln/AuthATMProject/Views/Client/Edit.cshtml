@@ -1,0 +1,96 @@
+﻿@model AuthATMProject.Models.ViewModels.CreateClientViewModel
+@{
+    ViewBag.Title = "Edit";
+}
+<link href="~/Content/jquery-ui.css" rel="stylesheet" />
+<h2>Edit</h2>
+@using (Html.BeginForm("AddOrEdit", "Client", FormMethod.Post, new { @enctype = "multipart/form-data", @id = "SubmitForm" }))
+{
+    @Html.HiddenFor(model => model.ClientId)
+    @Html.HiddenFor(model => model.ImageName)
+    @Html.AntiForgeryToken()
+    <h4>Edit Client</h4>
+    <div class="form-group row">
+        @Html.LabelFor(model => model.ClientName, htmlAttributes: new { @class = "form-control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.ClientName, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.ClientName, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="form-group row">
+        @Html.LabelFor(model => model.DateOfBirth, htmlAttributes: new { @class = "form-control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.TextBoxFor(model => model.DateOfBirth, "{0:MM/dd/yyyy}", new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.DateOfBirth, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="form-group row">
+        @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "form-control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="form-group row">
+        @Html.LabelFor(model => model.Phone, htmlAttributes: new { @class = "form-control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.Phone, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.Phone, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="form-group row">
+        @Html.LabelFor(model => model.IsActive, htmlAttributes: new { @class = "form-control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.CheckBoxFor(model => model.IsActive, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.IsActive, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="form-group row">
+        @Html.LabelFor(model => model.ImageURL, htmlAttributes: new { @class = "form-control-label col-md-2" })
+        <div class="col-md-10">
+            <img src="@Url.Content(Model.ImageURL)" width="80" height="80" class="change-edit" />
+            <input type="file" name="ImageFile" class="form-control changeImage" required />
+            @Html.ValidationMessageFor(model => model.ImageURL, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="form-group row">
+        @Html.LabelFor(model => model.AccountsTypeId, htmlAttributes: new { @class = "form-control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.DropDownListFor(model => model.AccountsTypeId, new SelectList(Model.AcList, "AccountsTypeId", "AccountsTitle"), "Select Account")
+            @Html.ValidationMessageFor(model => model.AccountsTypeId, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="=col-md-offset-2 col-md-10">
+            <input type="submit" value="Edit" class="=btn btn-success" />
+        </div>
+    </div>
+}
+<script src="~/Scripts/jquery-1.12.4.min.js"></script>
+<script src="~/Scripts/jquery-ui-1.12.1.js"></script>
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.bootstrap.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $("#DateOfBirth").datepicker({
+            changeMonth: true,
+            changeYear:true
+        });
+    })
+    $(function () {
+        $('.changeImage').change(function () {
+            var input = this;
+            if (input.files) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $('.change-edit').attr('src', e.target.result);
+                }
+                reader.readAsDataURL(input.files[0])
+            }
+            else {
+                $('.change-edit').attr('src', '/Images/@Model.ImageURL');
+            }
+        })
+    })
+</script>
+
